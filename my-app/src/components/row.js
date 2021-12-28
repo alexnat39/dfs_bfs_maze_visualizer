@@ -1,14 +1,16 @@
-import React from "react";
 import "../styles/row.scss";
 import Pixel from "./pixel";
+import React, { useState } from "react";
+
 
 export default function Row(props) {
-  const { width, selectedColor } = props;
-
+  const { width, rowNum } = props;
   let pixels = [];
 
   for (let i = 0; i < width; i++) {
-    pixels.push(<Pixel key={i} selectedColor={selectedColor} />);
+    console.log(width);
+    pixels.push(<Pixel key={i} columnNum={i} rowNum={rowNum} />);
+
   }
 
   return <div className="row">{pixels}</div>;
