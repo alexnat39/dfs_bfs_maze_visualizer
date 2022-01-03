@@ -63,7 +63,8 @@ class Algorithms {
         this.#findStartEnd();
         this.dataSctructure.push(maze.grid[this.startRow][this.startCol]);
         while (this.dataSctructure.length > 0) {
-            let mazeCell = this.dataSctructure.pop(); 
+            let isNeighborFound = false;
+            let mazeCell = this.dataSctructure[this.dataSctructure.length-1];
             this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
             this.currentPosition[0] = mazeCell.rowPositionNum;
             this.currentPosition[1] = mazeCell.columnPositionNum;
@@ -77,20 +78,24 @@ class Algorithms {
             //checking cell above the current one
             if (mazeCell.rowPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isWall) {
                 this.dataSctructure.push(maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum]);
+                isNeighborFound = true;
             }
             //checking cell  to the right of the current one
-            if (mazeCell.columnPositionNum != this.maze.grid[0].length - 1 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
+            else if (mazeCell.columnPositionNum != this.maze.grid[0].length - 1 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
                 this.dataSctructure.push(maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1]);
+                isNeighborFound = true;
             }               
             //checking cell below of the current one
-            if (mazeCell.rowPositionNum != this.maze.grid.length - 1 && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
+            else if (mazeCell.rowPositionNum != this.maze.grid.length - 1 && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
                 this.dataSctructure.push(maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum]);
+                isNeighborFound = true;
             }
             //checking cell to the left of the current one
-            if (mazeCell.columnPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
+            else if (mazeCell.columnPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
                 this.dataSctructure.push(maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1]);
-            }   
-             
+                isNeighborFound = true;
+            }  
+            if (!isNeighborFound) this.dataSctructure.pop(); 
         }
         console.log("we are stuck");
     }
@@ -111,7 +116,6 @@ maze.grid[1][4].isWall = true;
 maze.grid[2][3].isWall = true;
 maze.grid[3][1].isWall = true;
 maze.grid[3][2].isWall = true;
-maze.grid[4][1].isWall = true;
 
 let algorithms = new Algorithms(maze);
-algorithms.bfs();
+algorithms.dfs();
