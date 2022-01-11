@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import "../styles/drawingPanel.scss";
 import Row from "./row";
+import Algorithms from "../logic/algorithms.js"
 
 export default function DrawingPanel(props) {
   const { width, height, selectedColor } = props;

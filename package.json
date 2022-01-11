@@ -1,5 +1,10 @@
 {
   "dependencies": {
+    "node-sass": "^4.14.1",
+    "react-bootstrap": "^2.1.0",
     "react-grid-draw-ui": "^1.2.2"
+  },
+  "devDependencies": {
+    "sass": "^1.47.0"
   }
 }

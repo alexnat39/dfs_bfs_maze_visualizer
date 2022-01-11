@@ -1,7 +1,10 @@
 import "./App.css";
 import DrawingPanel from "./components/maze_ui.js";
 import React, { useState } from "react";
-import Maze from "./models/maze.js";
+import StaticVariables from "/Users/alexnat39/VSCode Projects/dfs_bfs_maze_visualizer/my-app/src/models/staticVariables.js";
+import Maze from "/Users/alexnat39/VSCode Projects/dfs_bfs_maze_visualizer/my-app/src/models/maze.js";
+
+StaticVariables.maze = new Maze(1,1);
 
 function App() {
   const [height, setHeight] = useState(0);
@@ -9,14 +12,15 @@ function App() {
   const [width, setWidth] = useState(0);
   const [tempWidth, setTempWidth] = useState(10);
   const [showMaze, setShowMaze] = useState(false);
-  const [maze, setMaze] = useState(new Maze(height, width));
+  const [mazeSpeedAnimation, setMazeSpeedAnimation] = useState(1);
+
 
   const generateMazeAction = () => {
     if (width != tempWidth || height != tempHeight) {
-      setMaze(new Maze(height, width));
       if (!showMaze) setShowMaze(true);
       setHeight(tempHeight);
       setWidth(tempWidth);
+      StaticVariables.maze = new Maze(tempHeight, tempWidth);
     }
   };
   return (
@@ -56,6 +60,18 @@ function App() {
           width={width > 25 ? 25 : width}
           height={height > 25 ? 25 : height}
         />
+      )}
+      {showMaze && (
+        <input 
+          type="number"
+          value={mazeSpeedAnimation}
+            min="1"
+            max="5"
+            onChange={(event) => {
+              setMazeSpeedAnimation(event.target.value);
+            }}
+          > 
+        </input>
       )}
     </div>
   );
