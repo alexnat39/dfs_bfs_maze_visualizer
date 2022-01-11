@@ -1,23 +1,19 @@
 import StaticVariables from '../models/staticVariables';
-import Maze from '/Users/alexnat39/VSCode Projects/dfs_bfs_maze_visualizer/my-app/src/models/maze.js'
 class Algorithms {
-    constructor(maze) {
-        this.maze = maze;
-        this.dataSctructure = [];
+    constructor() {
         this.startCol = 0;
         this.startRow = 0;
-        this.endCol = 0;
-        this.endRow = 0; 
-        this.currentPosition = [this.startRow, this.startCol];
+        this.endCol = StaticVariables.maze.grid.length - 1;
+        this.endRow = StaticVariables.maze.grid[0].length - 1; 
     }
 
     findStartEnd() {
-        for (let i = 0; i < this.maze.grid.length; i++) {
-            for (let j = 0; j < this.maze.grid[0].length; j++) {
-                if (this.maze.grid[i][j].isStart) {
+        for (let i = 0; i < StaticVariables.maze.grid.length; i++) {
+            for (let j = 0; j < StaticVariables.maze.grid[0].length; j++) {
+                if (StaticVariables.maze.grid[i][j].isStart) {
                     this.startRow = i;
                     this.startCol = j;
-                } else if (this.maze.grid[i][j].isEnd) {
+                } else if (StaticVariables.maze.grid[i][j].isEnd) {
                     this.endRow = i;
                     this.endCol = j;
                 }
@@ -25,45 +21,59 @@ class Algorithms {
         }
     }
 
-    bfs()  {
-        this.findStartEnd();
-        this.dataSctructure.push(this.maze.grid[this.startRow][this.startCol]);
-        while (this.dataSctructure.length > 0) {
-            let mazeCell = this.dataSctructure.shift(); 
-            this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
+    static timeout(ms) { //pass a time in milliseconds to this function
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-            this.currentPosition[0] = mazeCell.rowPositionNum;
-            this.currentPosition[1] = mazeCell.columnPositionNum;
+    static bfs()  {
+        //this.findStartEnd();
+        var dataSctructure = [];
+        var startRow = 0;
+        var startCol = 0;
+        var endRow = StaticVariables.maze.grid.length - 1;
+        var endCol = StaticVariables.maze.grid[0].length - 1;
+
+        //this.dataSctructure.push(StaticVariables.maze.grid[this.startRow][this.startCol]);
+        dataSctructure.push(StaticVariables.maze.grid[startRow][startCol]);
+        var currentPosition = [startRow, startCol];
+
+
+        while (dataSctructure.length > 0) {
+            new Promise(resolve => setTimeout(resolve, 3000));
+            let mazeCell = dataSctructure.shift(); 
+            StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
+
+            currentPosition[0] = mazeCell.rowPositionNum;
+            currentPosition[1] = mazeCell.columnPositionNum;
 
             //updating the global static variable for the tile we are on right now in the maze
-            StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
-            StaticVariables.rowPositionNum = this.currentPosition[0];
-            StaticVariables.columnPositionNum = this.currentPosition[1];
+            StaticVariables.rowPositionNum = currentPosition[0];
+            StaticVariables.columnPositionNum = currentPosition[1];
 
 
 
-            if (this.currentPosition[0] == this.endRow && this.currentPosition[1] == this.endRow) {
+            if (currentPosition[0] === endRow && currentPosition[1] === endCol) {
                 console.log("reached end");
                 return;
             }  
-            console.log(`[${this.currentPosition[0]}][${this.currentPosition[1]}]`);
+            console.log(`[${currentPosition[0]}][${currentPosition[1]}]`);
 
             //checking cells in Top-Right-Bottom-Left order
             //checking cell above the current one
-            if (mazeCell.rowPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum]);
+            if (mazeCell.rowPositionNum !== 0 && !StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isWall) {
+                dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum]);
             }
             //checking cell  to the right of the current one
-            if (mazeCell.columnPositionNum != this.maze.grid[0].length - 1 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1]);
+            if (mazeCell.columnPositionNum !== StaticVariables.maze.grid[0].length - 1 && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
+                dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1]);
             }               
             //checking cell below of the current one
-            if (mazeCell.rowPositionNum != this.maze.grid.length - 1 && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum]);
+            if (mazeCell.rowPositionNum !== StaticVariables.maze.grid.length - 1 && !StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
+                dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum]);
             }
             //checking cell to the left of the current one
-            if (mazeCell.columnPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1]);
+            if (mazeCell.columnPositionNum !== 0 && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
+                dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1]);
             }   
         }
         console.log("we are stuck");
@@ -71,11 +81,12 @@ class Algorithms {
     
     dfs() {
         this.findStartEnd();
-        this.dataSctructure.push(this.maze.grid[this.startRow][this.startCol]);
+        this.dataSctructure.push(StaticVariables.maze.grid[this.startRow][this.startCol]);
         while (this.dataSctructure.length > 0) {
+            this.timeout(3000);
             let isNeighborFound = false;
             let mazeCell = this.dataSctructure[this.dataSctructure.length-1];
-            this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
+            StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum].isVisited = true;
 
             this.currentPosition[0] = mazeCell.rowPositionNum;
             this.currentPosition[1] = mazeCell.columnPositionNum;
@@ -85,7 +96,7 @@ class Algorithms {
             StaticVariables.rowPositionNum = this.currentPosition[0];
             StaticVariables.columnPositionNum = this.currentPosition[1];
 
-            if (this.currentPosition[0] == this.endRow && this.currentPosition[1] == this.endRow) {
+            if (this.currentPosition[0] === this.endRow && this.currentPosition[1] === this.endRow) {
                 console.log("reached end");
                 return;
             }  
@@ -93,30 +104,34 @@ class Algorithms {
 
             //checking cells in Top-Right-Bottom-Left order
             //checking cell above the current one
-            if (mazeCell.rowPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum]);
+            if (mazeCell.rowPositionNum !== 0 && !StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum].isWall) {
+                this.dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum - 1][mazeCell.columnPositionNum]);
                 isNeighborFound = true;
             }
             //checking cell  to the right of the current one
-            else if (mazeCell.columnPositionNum != this.maze.grid[0].length - 1 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1]);
+            else if (mazeCell.columnPositionNum !== StaticVariables.maze.grid[0].length - 1 && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1].isWall) {
+                this.dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum + 1]);
                 isNeighborFound = true;
             }               
             //checking cell below of the current one
-            else if (mazeCell.rowPositionNum != this.maze.grid.length - 1 && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum]);
+            else if (mazeCell.rowPositionNum !== StaticVariables.maze.grid.length - 1 && !StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isVisited && !StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum].isWall) {
+                this.dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum + 1][mazeCell.columnPositionNum]);
                 isNeighborFound = true;
             }
             //checking cell to the left of the current one
-            else if (mazeCell.columnPositionNum != 0 && !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
-                this.dataSctructure.push(this.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1]);
+            else if (mazeCell.columnPositionNum !== 0 && !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isVisited &&  !StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1].isWall) {
+                this.dataSctructure.push(StaticVariables.maze.grid[mazeCell.rowPositionNum][mazeCell.columnPositionNum - 1]);
                 isNeighborFound = true;
             }  
             if (!isNeighborFound) this.dataSctructure.pop(); 
         }
         console.log("we are stuck");
     }
+
+    
+    
 }
+
 
 export default Algorithms;
 

@@ -3,6 +3,7 @@ import DrawingPanel from "./components/maze_ui.js";
 import React, { useState } from "react";
 import StaticVariables from "/Users/alexnat39/VSCode Projects/dfs_bfs_maze_visualizer/my-app/src/models/staticVariables.js";
 import Maze from "/Users/alexnat39/VSCode Projects/dfs_bfs_maze_visualizer/my-app/src/models/maze.js";
+import Algorithms from "./logic/algorithms";
 
 StaticVariables.maze = new Maze(1,1);
 
@@ -16,7 +17,7 @@ function App() {
 
 
   const generateMazeAction = () => {
-    if (width != tempWidth || height != tempHeight) {
+    if (width !== tempWidth || height !== tempHeight) {
       if (!showMaze) setShowMaze(true);
       setHeight(tempHeight);
       setWidth(tempWidth);
@@ -73,7 +74,11 @@ function App() {
           > 
         </input>
       )}
+      {showMaze && (
+        <button onClick={Algorithms.bfs}>Run BFS</button>
+      )}
     </div>
+
   );
 }
 

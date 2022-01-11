@@ -6,8 +6,8 @@ export default function Pixel(props) {
   const { columnNum, rowNum } = props;
 
   const [pixelColor, setPixelColor] = useState("#fff");
-  const [oldColor, setOldColor] = useState(pixelColor);
-  const [canChangeColor, setCanChangeColor] = useState(true);
+ // const [oldColor, setOldColor] = useState(pixelColor);
+  //const [canChangeColor, setCanChangeColor] = useState(true);
 
   function applyColor() {
     if (pixelColor === "#fff") {
@@ -22,17 +22,6 @@ export default function Pixel(props) {
     console.log(`column: ${columnNum}\nrow: ${rowNum}`);
   }
 
-  function changeColorOnHover() {
-    // setOldColor(pixelColor);
-    // setPixelColor("#51b3a4");
-    if (pixelColor === "#fff") {
-      setOldColor("#fff");
-      setPixelColor("#51b3a4");
-    } else {
-      setOldColor("#51b3a4");
-      setPixelColor("#fff");
-    }
-  }
 
   function resetColor() {
     // if (canChangeColor) {

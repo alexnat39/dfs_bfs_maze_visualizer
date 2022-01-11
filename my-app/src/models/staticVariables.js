@@ -1,4 +1,3 @@
-import Maze from "./maze";
 
 class StaticVariables {
     static maze;

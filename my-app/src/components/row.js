@@ -1,6 +1,6 @@
 import "../styles/row.scss";
 import Pixel from "./pixel";
-import React, { useState } from "react";
+import React from "react";
 
 
 export default function Row(props) {
